@@ -1,0 +1,89 @@
+/* ── Auth pages ─────────────────────────────────────────── */
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 16px;
+    border: none;
+}
+
+.app-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #0d6efd, #6610f2);
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: white;
+}
+
+/* ── Task cards ──────────────────────────────────────────── */
+.task-card {
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.task-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1) !important;
+}
+
+.task-text {
+    font-size: 15px;
+    font-weight: 500;
+    color: #212529;
+    line-height: 1.5;
+}
+
+.delete-btn {
+    border-radius: 8px;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+}
+
+.delete-btn:hover {
+    opacity: 1;
+}
+
+/* ── Floating action button ──────────────────────────────── */
+.fab {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(13, 110, 253, 0.45) !important;
+}
+
+.fab:active {
+    transform: scale(0.96);
+}
+
+/* ── Modal ───────────────────────────────────────────────── */
+.modal-content {
+    border-radius: 16px;
+    border: none;
+}
+
+/* ── Empty state ─────────────────────────────────────────── */
+.empty-state {
+    opacity: 0.7;
+}
+
+/* ── Navbar ──────────────────────────────────────────────── */
+.navbar {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}

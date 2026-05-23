@@ -3,6 +3,9 @@ from supabase import create_client
 from dotenv import load_dotenv
 import os
 import hashlib
+from datetime import datetime
+
+today = datetime.today().strftime("%Y-%m-%d")
 
 load_dotenv()
 
@@ -122,21 +125,52 @@ def home():
             supabase.table("todo").insert({
                 "user_id": user_id,
                 "date":    date,
-                "task":    task
+                "task":    task,
+                "description": request.form["description"],
+                "priority": request.form["priority"],
+                "due_time": request.form["due_time"],
+                "completed": "completed" in request.form
             }).execute()
             flash("Task added!", "success")
 
         return redirect(url_for("home"))
 
     # Fetch only this user's todos, newest first
-    response = supabase.table("todo") \
+    priority = request.args.get("priority")
+    status = request.args.get("status")
+    sort = request.args.get("sort", "newest")
+    search = request.args.get("search")
+
+    query = supabase.table("todo") \
         .select("*") \
-        .eq("user_id", user_id) \
-        .order("date", desc=True) \
-        .execute()
+        .eq("user_id", user_id)
+
+    # Search filter
+    if search:
+        query = query.ilike("task", f"%{search}%")
+
+    # Priority filter
+    if priority:
+        query = query.eq("priority", priority)
+
+    # Completed filter
+    if status is not None and status != "":
+        if status.lower() == "true":
+            query = query.eq("completed", True)
+        elif status.lower() == "false":
+            query = query.eq("completed", False)
+
+    # Sorting
+    if sort == "oldest":
+        query = query.order("date", desc=False)
+
+    else:
+        query = query.order("date", desc=True)
+
+    response = query.execute()
 
     todos = response.data
-    resp = make_response(render_template("home.html", todos=todos, username=session["username"]))
+    resp = make_response(render_template("home.html", todos=todos, username=session["username"], today=today))
     resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
     resp.headers["Pragma"]        = "no-cache"
     resp.headers["Expires"]       = "0"
@@ -162,6 +196,27 @@ def delete(todo_id):
         .execute()
 
     flash("Task deleted.", "info")
+    return redirect(url_for("home"))
+
+@app.route("/edit/<int:todo_id>", methods=["POST"])
+@login_required
+def edit(todo_id):
+    user_id = session["user_id"]
+
+    supabase.table("todo") \
+        .update({
+            "date": request.form["date"],
+            "task": request.form["task"],
+            "description": request.form["description"],
+            "priority": request.form["priority"],
+            "due_time": request.form["due_time"],
+            "completed": "completed" in request.form
+        }) \
+        .eq("id", todo_id) \
+        .eq("user_id", user_id) \
+        .execute()
+
+    flash("Task updated.", "info")
     return redirect(url_for("home"))
 
 

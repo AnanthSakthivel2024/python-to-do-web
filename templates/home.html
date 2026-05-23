@@ -3,136 +3,456 @@
 
 {% block body %}
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+<!-- NAVBAR -->
+
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar shadow-lg">
+
     <div class="container">
-        <a class="navbar-brand fw-bold" href="{{ url_for('home') }}">
-            <i class="bi bi-check2-square me-2"></i>TODO App
+
+        <a class="navbar-brand fw-bold fs-2"
+           href="{{ url_for('home') }}">
+
+            🌈 TODO App
+
         </a>
+
         <div class="d-flex align-items-center gap-3">
-            <span class="text-white">
-                <i class="bi bi-person-circle me-1"></i>{{ username }}
+
+            <span class="text-white fw-semibold">
+
+                <i class="bi bi-person-circle me-2"></i>
+                {{ username }}
+
             </span>
-            <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">
-                <i class="bi bi-box-arrow-right me-1"></i>Logout
+            <button
+                id="themeToggle"
+                class="btn btn-light rounded-pill px-3"
+            >
+                🌙
+            </button>
+            <a href="{{ url_for('logout') }}"
+               class="btn btn-light rounded-pill px-4">
+
+                Logout
+
             </a>
+
         </div>
+
     </div>
+
 </nav>
 
-<!-- Main content -->
 <div class="container mt-4 pb-5">
 
-    <!-- Header row -->
-    <div class="d-flex align-items-center justify-content-between mb-4">
-        <div>
-            <h4 class="fw-bold mb-0">My Tasks</h4>
-            <small class="text-muted">{{ todos|length }} task{{ 's' if todos|length != 1 }}</small>
+    <!-- Header -->
+
+    <div class="header-card mb-4">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h2 class="fw-bold mb-1">
+
+                    ✨ My Tasks
+
+                </h2>
+
+                <p class="text-muted mb-0">
+
+                    Organize your work beautifully
+
+                </p>
+
+            </div>
+
+            <div>
+
+                <span class="badge bg-dark fs-6 px-4 py-3 rounded-pill">
+
+                    {{ todos|length }} Tasks
+
+                </span>
+
+            </div>
+
         </div>
-        <span class="badge bg-primary fs-6 px-3 py-2">
-            {{ todos|length }} Total
-        </span>
+
     </div>
 
-    <!-- Task list -->
-    {% if todos %}
-        <div class="task-list">
-            {% for todo in todos %}
-            <div class="card task-card shadow-sm mb-3">
-                <div class="card-body d-flex align-items-start gap-3">
+    <!-- Filters -->
 
-                    <div class="task-check mt-1">
-                        <i class="bi bi-circle text-primary fs-5"></i>
-                    </div>
+    <div class="filter-box mb-4">
 
-                    <div class="flex-grow-1">
-                        <p class="task-text mb-1">{{ todo.task }}</p>
-                        <small class="text-muted">
-                            <i class="bi bi-calendar3 me-1"></i>{{ todo.date }}
-                        </small>
-                    </div>
+        <div class="row g-3">
 
-                    <!-- Delete button -->
-                    <form method="POST" action="{{ url_for('delete', todo_id=todo.id) }}"
-                          onsubmit="return confirm('Delete this task?')">
-                        <button type="submit" class="btn btn-outline-danger btn-sm delete-btn" title="Delete task">
-                            <i class="bi bi-trash3"></i>
-                        </button>
-                    </form>
+            <!-- Search -->
 
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <!-- Empty state -->
-        <div class="text-center py-5 empty-state">
-            <i class="bi bi-clipboard2 display-1 text-muted mb-3 d-block"></i>
-            <h5 class="text-muted">No tasks yet</h5>
-            <p class="text-muted">Click the <strong>+</strong> button below to add your first task</p>
-        </div>
-    {% endif %}
+            <div class="col-md-4">
 
-</div>
+                <div class="input-group">
 
-<!-- Floating Add Button -->
-<button class="btn btn-primary fab shadow-lg" data-bs-toggle="modal" data-bs-target="#addTaskModal" title="Add new task">
-    <i class="bi bi-plus-lg"></i>
-</button>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        class="form-control rounded-start-pill"
+                        placeholder="Search task..."
+                        value="{{ request.args.get('search', '') }}"
+                    >
 
-<!-- Add Task Modal -->
-<div class="modal fade" id="addTaskModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content shadow-lg">
+                    <button
+                        class="btn btn-dark rounded-end-pill"
+                        type="button"
+                        onclick="applyFilters()"
+                    >
 
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold">
-                    <i class="bi bi-plus-circle text-primary me-2"></i>Add New Task
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
+                        <i class="bi bi-search"></i>
 
-            <form method="POST" action="{{ url_for('home') }}">
-                <div class="modal-body pt-3">
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Date</label>
-                        <input
-                            type="date"
-                            name="date"
-                            class="form-control"
-                            id="taskDate"
-                            required
-                        >
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label fw-semibold">Task</label>
-                        <textarea
-                            name="task"
-                            class="form-control"
-                            placeholder="What do you need to do?"
-                            rows="3"
-                            required
-                        ></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer border-0 pt-0">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary px-4 fw-semibold">
-                        <i class="bi bi-plus-lg me-1"></i>Add Task
                     </button>
+
                 </div>
-            </form>
+
+            </div>
+
+            <!-- Priority -->
+
+            <div class="col-md-3">
+
+                <select id="priorityFilter"
+                        class="form-select rounded-pill">
+
+                    <option value="">All Priorities</option>
+
+                    <option value="High">High</option>
+
+                    <option value="Medium">Medium</option>
+
+                    <option value="Low">Low</option>
+
+                </select>
+
+            </div>
+
+            <!-- Status -->
+
+            <div class="col-md-3">
+
+                <select id="statusFilter"
+                        class="form-select rounded-pill">
+
+                    <option value="">All Status</option>
+
+                    <option value="true">Completed</option>
+
+                    <option value="false">Pending</option>
+
+                </select>
+
+            </div>
+
+            <!-- Sort -->
+
+            <div class="col-md-2">
+
+                <select id="sortFilter"
+                        class="form-select rounded-pill">
+
+                    <option value="newest">Newest</option>
+
+                    <option value="oldest">Oldest</option>
+
+                </select>
+
+            </div>
 
         </div>
+
     </div>
+
+    <!-- TASKS -->
+
+    {% for todo in todos %}
+
+    <div class="task-card-modern
+
+        {% if not todo.completed and todo.date < today %}
+            overdue-task
+        {% endif %}
+
+        {% if todo.completed %}
+            completed-task
+        {% endif %}
+    ">
+
+        <div class="task-card-inner">
+
+            <!-- Left -->
+
+            <div class="task-content">
+
+                <div class="d-flex align-items-center gap-3">
+
+                    {% if todo.completed %}
+                        <span class="status-dot bg-success"></span>
+                    {% else %}
+                        <span class="status-dot bg-danger"></span>
+                    {% endif %}
+
+                    <h3 class="task-title
+                        {% if todo.completed %}
+                            completed-text
+                        {% endif %}
+                    ">
+                        {{ todo.task }}
+                    </h3>
+
+                </div>
+
+                <p class="task-description">
+
+                    {{ todo.description }}
+
+                </p>
+
+                <div class="task-tags">
+
+                    {% if not todo.completed and todo.date < today %}
+
+                        <span class="custom-badge badge-overdue">
+
+                            ⏰ Overdue
+
+                        </span>
+
+                    {% endif %}
+
+                    <span class="custom-badge
+
+                        {% if todo.priority == 'High' %}
+                            badge-high
+                        {% elif todo.priority == 'Medium' %}
+                            badge-medium
+                        {% else %}
+                            badge-low
+                        {% endif %}
+                    ">
+
+                        {{ todo.priority }}
+
+                    </span>
+
+                    <span class="custom-badge badge-light">
+
+                        ⏰ {{ todo.due_time }}
+
+                    </span>
+
+                    <span class="custom-badge badge-light">
+
+                        📅 {{ todo.date }}
+
+                    </span>
+
+                    {% if todo.completed %}
+
+                        <span class="custom-badge badge-completed">
+
+                            ✅ Completed
+
+                        </span>
+
+                    {% else %}
+
+                        <span class="custom-badge badge-pending">
+
+                            ⏳ Pending
+
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <!-- Buttons -->
+
+            <div class="task-actions">
+
+                <!-- Edit -->
+
+                <button
+                    type="button"
+                    class="action-btn edit-btn"
+
+                    data-bs-toggle="modal"
+                    data-bs-target="#editModal"
+
+                    data-id="{{ todo.id }}"
+                    data-date="{{ todo.date }}"
+                    data-task="{{ todo.task }}"
+                    data-description="{{ todo.description }}"
+                    data-priority="{{ todo.priority }}"
+                    data-due-time="{{ todo.due_time }}"
+                    data-completed="{{ todo.completed }}"
+
+                    onclick="setEditData(this)"
+                >
+
+                    <i class="bi bi-pencil-square"></i>
+
+                </button>
+
+                <!-- Delete -->
+
+                <form
+                    method="POST"
+                    action="{{ url_for('delete', todo_id=todo.id) }}"
+                    onsubmit="return confirm('Delete this task?')"
+                >
+
+                    <button
+                        type="submit"
+                        class="action-btn delete-btn"
+                    >
+
+                        <i class="bi bi-trash3"></i>
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+    <!-- Bottom Rainbow -->
+
+    <div class="rainbow-bar mt-5"></div>
+
 </div>
+
+<!-- Floating Button -->
+
+<button
+    class="fab shadow-lg"
+    data-bs-toggle="modal"
+    data-bs-target="#addTaskModal"
+>
+
+    <i class="bi bi-plus-lg"></i>
+
+</button>
 
 {% endblock %}
 
 {% block scripts %}
+
 <script>
-    // Set today's date as default in modal
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('taskDate').value = today;
+
+const priorityFilter =
+    document.getElementById("priorityFilter");
+
+const statusFilter =
+    document.getElementById("statusFilter");
+
+const sortFilter =
+    document.getElementById("sortFilter");
+
+const searchInput =
+    document.getElementById("searchInput");
+
+function applyFilters(){
+
+    const priority = priorityFilter.value;
+    const status = statusFilter.value;
+    const sort = sortFilter.value;
+    const search = searchInput.value;
+
+    let url = "/home?";
+
+    if(search)
+        url += "search=" +
+            encodeURIComponent(search) + "&";
+
+    if(priority)
+        url += "priority=" +
+            priority + "&";
+
+    if(status)
+        url += "status=" +
+            status + "&";
+
+    url += "sort=" + sort;
+
+    window.location.href = url;
+}
+
+priorityFilter.addEventListener(
+    "change",
+    applyFilters
+);
+
+statusFilter.addEventListener(
+    "change",
+    applyFilters
+);
+
+sortFilter.addEventListener(
+    "change",
+    applyFilters
+);
+
+searchInput.addEventListener(
+    "keyup",
+    function(event){
+
+        if(event.key === "Enter"){
+
+            applyFilters();
+        }
+    }
+);
+
+</script>
+<script>
+
+/* DARK MODE */
+
+const themeToggle =
+    document.getElementById("themeToggle");
+
+/* Load saved mode */
+
+if(localStorage.getItem("theme") === "dark"){
+
+    document.body.classList.add("dark-mode");
+
+    themeToggle.innerHTML = "☀️";
+}
+
+themeToggle.addEventListener("click", () => {
+
+    document.body.classList.toggle("dark-mode");
+
+    if(document.body.classList.contains("dark-mode")){
+
+        localStorage.setItem("theme", "dark");
+
+        themeToggle.innerHTML = "☀️";
+
+    }else{
+
+        localStorage.setItem("theme", "light");
+
+        themeToggle.innerHTML = "🌙";
+    }
+});
+
 </script>
 {% endblock %}

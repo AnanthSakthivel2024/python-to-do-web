@@ -85,88 +85,57 @@
 
     <div class="filter-box mb-4">
 
-        <div class="row g-3">
+        <div class="row g-2 align-items-center">
 
-            <!-- Search -->
+        <!-- Search -->
+        <div class="col-md-4">
+            <div class="input-group">
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="form-control rounded-start-pill"
+                    placeholder="Search task..."
+                    value="{{ request.args.get('search', '') }}"
+                >
 
-            <div class="col-md-4">
-
-                <div class="input-group">
-
-                    <input
-                        type="text"
-                        id="searchInput"
-                        class="form-control rounded-start-pill"
-                        placeholder="Search task..."
-                        value="{{ request.args.get('search', '') }}"
-                    >
-
-                    <button
-                        class="btn btn-dark rounded-end-pill"
-                        type="button"
-                        onclick="applyFilters()"
-                    >
-
-                        <i class="bi bi-search"></i>
-
-                    </button>
-
-                </div>
-
+                <button
+                    class="btn btn-dark rounded-end-pill"
+                    type="button"
+                    onclick="applyFilters()"
+                >
+                    <i class="bi bi-search"></i>
+                </button>
             </div>
-
-            <!-- Priority -->
-
-            <div class="col-md-3">
-
-                <select id="priorityFilter"
-                        class="form-select rounded-pill">
-
-                    <option value="">All Priorities</option>
-
-                    <option value="High">High</option>
-
-                    <option value="Medium">Medium</option>
-
-                    <option value="Low">Low</option>
-
-                </select>
-
-            </div>
-
-            <!-- Status -->
-
-            <div class="col-md-3">
-
-                <select id="statusFilter"
-                        class="form-select rounded-pill">
-
-                    <option value="">All Status</option>
-
-                    <option value="true">Completed</option>
-
-                    <option value="false">Pending</option>
-
-                </select>
-
-            </div>
-
-            <!-- Sort -->
-
-            <div class="col-md-2">
-
-                <select id="sortFilter"
-                        class="form-select rounded-pill">
-
-                    <option value="newest">Newest</option>
-
-                    <option value="oldest">Oldest</option>
-
-                </select>
-
-            </div>
-
         </div>
+
+        <!-- Priority -->
+        <div class="col-md-3">
+            <select id="priorityFilter" class="form-select rounded-pill">
+                <option value="">All Priorities</option>
+                <option value="High" {% if request.args.get('priority') == 'High' %}selected{% endif %}>High</option>
+                <option value="Medium" {% if request.args.get('priority') == 'Medium' %}selected{% endif %}>Medium</option>
+                <option value="Low" {% if request.args.get('priority') == 'Low' %}selected{% endif %}>Low</option>
+            </select>
+        </div>
+
+        <!-- Status -->
+        <div class="col-md-3">
+            <select id="statusFilter" class="form-select rounded-pill">
+                <option value="">All Status</option>
+                <option value="true" {% if request.args.get('status') == 'true' %}selected{% endif %}>Completed</option>
+                <option value="false" {% if request.args.get('status') == 'false' %}selected{% endif %}>Pending</option>
+            </select>
+        </div>
+
+        <!-- Sort -->
+        <div class="col-md-2">
+            <select id="sortFilter" class="form-select rounded-pill">
+                <option value="newest" {% if request.args.get('sort', 'newest') == 'newest' %}selected{% endif %}>Newest</option>
+                <option value="oldest" {% if request.args.get('sort') == 'oldest' %}selected{% endif %}>Oldest</option>
+            </select>
+        </div>
+
+    </div>
 
     </div>
 

@@ -12,6 +12,205 @@
 
     {% block body %}{% endblock %}
 
+    <!-- ═══════════════════════════════════════════════════════
+         ADD TASK MODAL
+    ════════════════════════════════════════════════════════ -->
+    <div class="modal fade" id="addTaskModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg" style="border-radius:16px; border:none;">
+
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">
+                        <i class="bi bi-plus-circle text-primary me-2"></i>Add New Task
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <form method="POST" action="/home">
+                    <div class="modal-body pt-3">
+
+                        <!-- Task name -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Task <span class="text-danger">*</span></label>
+                            <input
+                                type="text"
+                                name="task"
+                                class="form-control"
+                                placeholder="What do you need to do?"
+                                required
+                            >
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Description</label>
+                            <textarea
+                                name="description"
+                                class="form-control"
+                                placeholder="Add more details (optional)"
+                                rows="2"
+                            ></textarea>
+                        </div>
+
+                        <!-- Date + Due Time -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <label class="form-label fw-semibold">Date <span class="text-danger">*</span></label>
+                                <input
+                                    type="date"
+                                    name="date"
+                                    id="addDate"
+                                    class="form-control"
+                                    required
+                                >
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-semibold">Due Time</label>
+                                <input
+                                    type="time"
+                                    name="due_time"
+                                    class="form-control"
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Priority -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Priority</label>
+                            <select name="priority" class="form-select">
+                                <option value="Low">🟢 Low</option>
+                                <option value="Medium" selected>🟡 Medium</option>
+                                <option value="High">🔴 High</option>
+                            </select>
+                        </div>
+
+                        <!-- Completed checkbox -->
+                        <div class="form-check">
+                            <input
+                                type="checkbox"
+                                name="completed"
+                                id="addCompleted"
+                                class="form-check-input"
+                            >
+                            <label class="form-check-label" for="addCompleted">
+                                Mark as completed
+                            </label>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary px-4 fw-semibold">
+                            <i class="bi bi-plus-lg me-1"></i>Add Task
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         EDIT TASK MODAL
+    ════════════════════════════════════════════════════════ -->
+    <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg" style="border-radius:16px; border:none;">
+
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">
+                        <i class="bi bi-pencil-square text-warning me-2"></i>Edit Task
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <form method="POST" id="editForm" action="">
+                    <div class="modal-body pt-3">
+
+                        <!-- Task name -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Task <span class="text-danger">*</span></label>
+                            <input
+                                type="text"
+                                name="task"
+                                id="editTask"
+                                class="form-control"
+                                required
+                            >
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Description</label>
+                            <textarea
+                                name="description"
+                                id="editDescription"
+                                class="form-control"
+                                rows="2"
+                            ></textarea>
+                        </div>
+
+                        <!-- Date + Due Time -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <label class="form-label fw-semibold">Date <span class="text-danger">*</span></label>
+                                <input
+                                    type="date"
+                                    name="date"
+                                    id="editDate"
+                                    class="form-control"
+                                    required
+                                >
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-semibold">Due Time</label>
+                                <input
+                                    type="time"
+                                    name="due_time"
+                                    id="editDueTime"
+                                    class="form-control"
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Priority -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Priority</label>
+                            <select name="priority" id="editPriority" class="form-select">
+                                <option value="Low">🟢 Low</option>
+                                <option value="Medium">🟡 Medium</option>
+                                <option value="High">🔴 High</option>
+                            </select>
+                        </div>
+
+                        <!-- Completed checkbox -->
+                        <div class="form-check">
+                            <input
+                                type="checkbox"
+                                name="completed"
+                                id="editCompleted"
+                                class="form-check-input"
+                            >
+                            <label class="form-check-label" for="editCompleted">
+                                Mark as completed
+                            </label>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-warning px-4 fw-semibold">
+                            <i class="bi bi-save me-1"></i>Save Changes
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
     <!-- Flash messages (toast) -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -34,7 +233,39 @@
         document.querySelectorAll('.toast').forEach(t => {
             setTimeout(() => new bootstrap.Toast(t).hide(), 3000);
         });
+
+        // Set today's date as default in Add modal
+        document.getElementById('addDate').value =
+            new Date().toISOString().split('T')[0];
+
+        // Populate Edit modal with task data
+        function setEditData(btn) {
+            const id          = btn.dataset.id;
+            const date        = btn.dataset.date;
+            const task        = btn.dataset.task;
+            const description = btn.dataset.description;
+            const priority    = btn.dataset.priority;
+            const dueTime     = btn.dataset.dueTime;
+            const completed   = btn.dataset.completed === "True";
+
+            // Set form action to the correct edit URL
+            document.getElementById('editForm').action = '/edit/' + id;
+
+            // Fill fields
+            document.getElementById('editTask').value        = task;
+            document.getElementById('editDescription').value = description || '';
+            document.getElementById('editDate').value        = date;
+            document.getElementById('editDueTime').value     = dueTime || '';
+            document.getElementById('editCompleted').checked = completed;
+
+            // Set correct priority option
+            const prioritySelect = document.getElementById('editPriority');
+            for (let option of prioritySelect.options) {
+                option.selected = option.value === priority;
+            }
+        }
     </script>
+
     {% block scripts %}{% endblock %}
 </body>
 </html>

@@ -126,9 +126,9 @@ def home():
                 "user_id": user_id,
                 "date":    date,
                 "task":    task,
-                "description": request.form["description"],
+                "description": request.form["description"] or None,
                 "priority": request.form["priority"],
-                "due_time": request.form["due_time"],
+                "due_time": request.form["due_time"] or None,
                 "completed": "completed" in request.form
             }).execute()
             flash("Task added!", "success")
@@ -207,9 +207,9 @@ def edit(todo_id):
         .update({
             "date": request.form["date"],
             "task": request.form["task"],
-            "description": request.form["description"],
+            "description": request.form["description"] or None,
             "priority": request.form["priority"],
-            "due_time": request.form["due_time"],
+            "due_time": request.form["due_time"] or None,
             "completed": "completed" in request.form
         }) \
         .eq("id", todo_id) \
